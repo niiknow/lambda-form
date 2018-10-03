@@ -12,7 +12,10 @@
 
 ### Run Stack
 * [MJML](https://mjml.io/) and [Nunjucks](https://mozilla.github.io/nunjucks/)- so you can customize your email
-* [nodemailer](https://github.com/nodemailer/nodemailer) - send email
+* [nodemailer](https://github.com/nodemailer/nodemailer) - send smtp email (pretty much everybody does smtp, including: ses, sendgrid, mailgun, sendinblue, etc...)
 * [recaptcha2](https://github.com/fereidani/recaptcha2) - to protect your form
+
+## NOTE
+* AWS may block or limit sends from port 25, so you should use a different port.  It is also best to send with SSL only.
 
 ## MIT

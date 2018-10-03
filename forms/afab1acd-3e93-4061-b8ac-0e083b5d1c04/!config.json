@@ -1,0 +1,18 @@
+{
+    "config_override": {
+        "from": "from email",
+        "to": "to email",
+        "smtp_host": "xyz.com",
+        "smtp_user": "username",
+        "smtp_pass": "password",
+        "smtp_port": "",
+        "use_ssl": true,
+        "business_name": "niiknow",
+        "recaptcha_secret": "xyz",
+        "valid_origins": "a comma separated list of valid origins",
+        "validate_honeypot": true
+    },
+    "id": "some guid",
+    "redir": "https://www.example.com/thank-you-page",
+    "email_field": "identify the email field on the form to send a copy"
+}

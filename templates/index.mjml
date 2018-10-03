@@ -14,7 +14,7 @@
         <mj-text font-size="10px">New submission @ {headers.origin}</mj-text>
       </mj-column>
       <mj-column width="40%">
-        <mj-text align="right">{form.brand_name}</mj-text>
+        <mj-text align="right">{form.config.business_name}</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
