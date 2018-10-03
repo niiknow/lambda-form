@@ -1,2 +1,2 @@
 # Lambda Form
-> A [Serverless](https://serverless.com/) service to handler form submissions using AWS Lambda.
+> A [Serverless](https://serverless.com/) service to handle form submissions using AWS Lambda.
