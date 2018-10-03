@@ -1,0 +1,7 @@
+{
+    "id": "some guid",
+    "smtp": {
+        "host": "xyz.com"
+    },
+    "brand_name": "Niiknow"
+}

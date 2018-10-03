@@ -27,11 +27,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
-    "aws-sdk": "^2.202.0",
-    "consolidate": "^0.15.1",
     "debug": "^4.0.1",
-    "dot": "^1.1.2",
     "mjml": "^4.2.0-beta.3",
+    "nodemailer": "^4.6.8",
     "nunjucks": "^3.1.3",
     "pretty": "^2.0.0",
     "recaptcha2": "^1.3.2",
@@ -39,6 +37,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.1",
+    "aws-sdk": "^2.202.0",
     "babel-loader": "^8.0.2",
     "babel-plugin-source-map-support": "^2.0.1",
     "babel-plugin-transform-runtime": "^6.23.0",
