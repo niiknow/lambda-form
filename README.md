@@ -30,7 +30,7 @@ A contact form usually send email to both Submitter and Form's Creator/Owner.  T
 * [nodemailer](https://github.com/nodemailer/nodemailer) - send smtp email (pretty much everybody does smtp, including: ses, sendgrid, mailgun, sendinblue, etc...)
 * [recaptcha2](https://github.com/fereidani/recaptcha2) - to protect your form
 
-#Project Structure
+# Project Structure
 ```
 forms/     - example and for unit testing
 lib/       - helpers
@@ -40,7 +40,7 @@ handler.js - main form submit handler
 env.yml    - define environment variable such as FORMBUCKET
 ```
 
-#Form/Config Schema
+# Form/Config Schema
 ```json
 {
     "smtp_from": "from email",
