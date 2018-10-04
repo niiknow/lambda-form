@@ -5,7 +5,7 @@ A contact form usually email both Submitter and Form's Creator/Owner.  This Serv
 
 - Deploy this function and create the associated s3 bucket to store form config and submissions.
 - Create the form config and upload to s3 bucket.  This can be done manually or by creating some kind of admin (outside the scope of this project).
-- Create the front-end of the form and submit to the endpoint.  Example: [Demo](https://niiknow.github.io/lambda-form/demo/)
+- Create the front-end of the form and submit to the endpoint.  Example: [Demo](https://niiknow.github.io/lambda-form/demo/) and the backend form configuration for this demo: https://github.com/niiknow/lambda-form/blob/master/demo/!config.json
 
 Fill in the demo form with a real email and wait for result.
 
