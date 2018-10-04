@@ -106,6 +106,6 @@ use-random-guid-for-best-form-id-performance/!config.json
 - [ ] Probably a plugin system to allow plugins enabling base on form config.  Possible plugins:  fallback with SES, more spam validation, ability to track email with google analytic pixel
 
 # Point of Interest
-Since this is Serverless, this setup can really scale.  It can be use as a component in your Software-as-a-Service *SaaS* or Form-as-a-Service *FaaS* platform.  All you need is an Admin portal with a FormBuilder - hint - [grapejs](https://github.com/artf/grapesjs)
+Since this is Serverless, this setup can really scale.  It can be use as a component in your Software-as-a-Service *SaaS* platform, like a clone of wufoo.  All you need is an Admin portal with a FormBuilder - hint - [grapejs](https://github.com/artf/grapesjs)
 
 # MIT
