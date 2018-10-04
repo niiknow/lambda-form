@@ -13,8 +13,16 @@ import validator from './lib/validator'
 
 const viewEngine = consolidate['nunjucks']
 const debug      = require('debug')('lambda-form')
-
+/**
+ * Handle form post of type application/(json or x-www-form-urlencoded)
+ *
+ * @param  object     event    [description]
+ * @param  object     context  [description]
+ * @param  Function   callback [description]
+ */
 export const formPostHandler = async (event, context, callback) => {
+  // possible use isNotJson to change respones to redirect instead of error json?
+  const isNotJson  = (event.headers['Content-Type'] === 'application/x-www-form-urlencoded')
   const id         = event.pathParameters.id
   const rspHeaders = {
     'Content-Type': 'application/json',
@@ -46,7 +54,7 @@ export const formPostHandler = async (event, context, callback) => {
   // apply defaults
   form.name    = form.name || ''
   if (typeof(body) === 'string') {
-    if (event.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+    if (isNotJson) {
       body = qs.parse(body)
     }
     else {
