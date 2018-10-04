@@ -104,6 +104,8 @@ use-random-guid-for-best-form-id-performance/!config.json
 - [ ] Per field validation - possibly use [Indicative](https://indicative.adonisjs.com/) for validation of json
 - [ ] Handle Image/File form submit/upload
 - [ ] Probably a plugin system to allow plugins enabling base on form config.  Possible plugins:  fallback with SES, more spam validation, ability to track email with google analytic pixel
+- [ ] Payment gateway integration strategy start with Stripe.  Maybe it will be part of plugin system.
+- [ ] Refactor email and google recaptcha into plugin?
 
 # Point of Interest
 Since this is Serverless, this setup can really scale.  It can be use as a component in your Software-as-a-Service *SaaS* platform, like a clone of wufoo.  All you need is an Admin portal with a FormBuilder - hint - [grapejs](https://github.com/artf/grapesjs)
