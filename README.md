@@ -38,8 +38,9 @@ templates/ - email templates
 tests/     - test data
 handler.js - main form submit handler
 env.yml    - define environment variable such as FORMBUCKET
+```
 
-**Form/Config Schema**
+#Form/Config Schema
 ```json
 {
     "smtp_from": "from email",
