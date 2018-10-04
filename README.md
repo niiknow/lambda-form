@@ -5,19 +5,19 @@ A contact form usually email both Submitter and Form's Creator/Owner.  This Serv
 
 - Deploy this function and create the associated s3 bucket to store form config and submissions.
 - Create the form config and upload to s3 bucket.  This can be done manually or by creating some kind of admin (outside the scope of this project).
-- Create the front-end of the form and submit to the endpoint.  Example: https://niiknow.github.io/lambda-form/demo/ and the backend form configuration for this demo: https://github.com/niiknow/lambda-form/blob/master/demo/!config.json
+- Create the front-end of the form and submit to the endpoint.  Example: https://niiknow.github.io/lambda-form/demo/ with backend configuration of https://github.com/niiknow/lambda-form/blob/master/demo/!config.json
 
-Fill in the demo form with a real email and wait for result.
+Fill out the demo form with a real email and wait for result.
 
 **Result**
 1. An email is sent to the Submitter
 2. An email is sent to the Owner
 3. A form submission record is stored on S3 with the extension '.submit'
 
-**bot deterrent features**
-- Define a honeypot hidden input to protect from generic spam bot - if you ever run a wordpress blog, you may find that there are these bots that go around to auto-submit form and comments with spam messages.
-- Define origins to protect post from unknown website.
-- Define and place google recaptcha to prevent more advanced bots.
+**Bot/Span deterrent features**
+- Define a honeypot hidden input to protect from generic spam bot - if run any kind of commentable blog/website, you've probably seen bots that auto-submit these forms with spam.  Honeypot help deny majority of these dumb bots.
+- Define website origins to protect being use with unknown website.
+- Setup recaptcha to prevent smarter bots.
 
 # Tech Stacks
 **Dev Stack**
@@ -31,23 +31,64 @@ Fill in the demo form with a real email and wait for result.
 * [nodemailer](https://github.com/nodemailer/nodemailer) - send smtp email (pretty much everybody does smtp, including: ses, sendgrid, mailgun, sendinblue, etc...)
 * [recaptcha2](https://github.com/fereidani/recaptcha2) - to protect your form
 
+# Commands
+**To Test**
+```
+npm install
+./run-data-tests.sh
+```
+
+**To Run/Deploy**
+1. Create s3 bucket
+2. Create environment file from example and set the FORMBUCKET value
+```
+cp env.yml.example env.yml
+```
+3. Deploy
+```
+npm install
+npm run deploy
+```
+4. It will deploy dev and give you a URL that you can post to, something like: https://{some-id}.execute-api.us-east-1.amazonaws.com/dev/form/{id}
+5. Update *demo/!config.json* line 2-7 to your SMTP and email
+6. Upload this file to your s3 bucket like so
+```
+demo/!config.json
+```
+7. Post to your new endpoint, in this case, *demo* is your form {id}
+```
+https://{some-id}.execute-api.us-east-1.amazonaws.com/dev/form/demo
+```
+8. Repeat for any new form.  Use random guid as form id to improve performance.
+9. When ready, update serverless.yml to prod and deploy
+```yml
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev # change dev to prod
+  region: us-east-1
+```
+
 # Features
-- [x] Per form confirmation, no hardcoding of config
-- [x] Email to both form Submitter and Owner
-- [x] Flexible email templating with mjml and nunjucks
+- [x] Per Form configuration, no hardcoding of config or field names
+- [x] No restriction on field name and/or accept any number of inputs
+- [x] Send email to form Submitter and Owner
+- [x] Flexible email subject and body templating with mjml and nunjucks
 - [x] Validate origin domain, recaptcha2, and honeypot
-- [x] Completely serverless, store form configuration and result on s3 
-- [x] Email sent are replyable, e.g. emails are sent with 'Reply-To' header *as on behalf of* the Owner/Submitter
-- [x] One of the biggest advantage is that form fields are not hardcoded.  It can take unlimited number of fields that are either *application/json or application/x-www-form-urlencoded*.  At the moment, there is no defined strategy to accept file upload/binary or multipart/form-data form type.
+- [x] Completely serverless, store and read configuration and result on s3 
+- [x] Email sent are replyable, e.g. email sent with 'Reply-To' header *as on behalf of* the Owner/Submitter
+- [ ] At the moment, there is no defined strategy to accept binary file upload or multipart/form-data form type.
 
 # Why S3 and not directly into some database or sqs/sns?
-Because it is serverless and event triggerable.  SQS and SNS has a limit on the message size.
+Because it is Serverless and event triggerable.  SQS and SNS has a limit on message size.
 
-You can use s3 event to trigger other actions such as Zapier callback.  It can also trigger and store this data somewhere or on [Amazon Aurora Serverless](https://aws.amazon.com/rds/aurora/serverless/).
+You can use s3 event to trigger followup actions, such as Zapier callback, email subscription, etc...  It can also store this data somewhere like on [Amazon Aurora Serverless](https://aws.amazon.com/rds/aurora/serverless/).
 
-Usually, we want the form to be fast.  The form is already doing a lot of work so we don't want to tack on any unnecessary work.  The benefit of s3 event is that it can defer the work at a later time allowing for quick return of result to the user.
+Usually, we want the form to be fast.  The form is already doing a lot of work so we don't want to tack on any unnecessary work.  The benefit of s3 event is to defer the work at a later time, allowing for faster response time.
 
-# Project Structure
+Other things that can add more delays in the future is support of plugins like Payment Gateways, such as Stripe and/or Paypal.  It may result in pushing email to a later s3 event trigger.
+
+# Project Organization
 ```shell
 forms/     - example and for unit testing
 lib/       - helpers
@@ -93,13 +134,13 @@ use-random-guid-for-best-form-id-performance/!config.json
 }
 ```
 
-# NOTE
-* This project require AWS S3 private bucket.  Please make sure you have your bucket is not public or you will expose your smtp credential.
-* AWS may block or limit sends from port 25, so you should use a different port.  It is also best to send with SSL only.
-* Outside of FORMBUCKET, there is no other config on the server. Each form configuration contain it's own SMTP setup.  Everything rely on you correctly setting up your FORM config.
-* Remember, if you use application/x-www-form-urlencoded, you should set a redirection (redir property) to provide redirect result.
+# Note
+* This project require AWS S3 private bucket.  Please make sure your bucket is not public or you will expose your SMTP and other credentials.
+* AWS may block or limit sends from port 25, so you should use a different port.
+* Outside of FORMBUCKET, there is no other config on the server. Each form configuration contain it's own SMTP setup.
+* Remember, if you use application/x-www-form-urlencoded, you should set a redirection (redir property) to provide redirect result.  The front-end can also pass in a "redir" query string parameter.
 
-# TODO/FUTURE ENHANCEMENTS
+# TODO/Future Enhancements
 - [ ] Filters to include or exclude fields so hidden form field won't come through to the email
 - [ ] Per field validation - possibly use [Indicative](https://indicative.adonisjs.com/) for validation of json
 - [ ] Handle Image/File form submit/upload
