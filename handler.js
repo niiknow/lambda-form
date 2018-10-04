@@ -85,7 +85,7 @@ export const formPostHandler = async (event, context, callback) => {
     return callback(null, {
       statusCode: 403,
       headers: rspHeaders,
-      body: JSON.stringify({code: 403, message: `Invalid origin (${locals.headers.origin}) submission.`})
+      body: JSON.stringify({code: 403, message: `Invalid origin (${locals.headers.Referer}) submission.`})
     })
   }
 
