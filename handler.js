@@ -9,6 +9,7 @@ import qs from 'qs'
 import mailer from './lib/mailer'
 import readconfig from './lib/readconfig'
 import saver from './lib/saver'
+import validator from './lib/validator'
 
 const viewEngine = consolidate['nunjucks']
 const debug      = require('debug')('lambda-form')
@@ -148,12 +149,12 @@ export const formPostHandler = async (event, context, callback) => {
     }
   }
 
-  const userEmail  = body[form.email_user]
-  const ownerEmail = body[form.owner_email]
+  const userEmail  = validator.isEmail(body[form.email_user]) ? body[form.email_user] : null
+  const ownerEmail = form.owner_email
   const persistAll = [saver(locals)]
 
   // send owner email
-  if (ownerEmail) {
+  if (ownerEmail && validator.isEmail(ownerEmail)) {
     // owner reply go to user
     persistAll.push(mailer(locals, ownerEmail, ownerSubject, ownerBody, userEmail))
   }
