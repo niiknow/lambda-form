@@ -2,5 +2,8 @@
   "headers": {
     "origin": "http://localhost:3000"
   },
+  "pathParameters": {
+    "id": "general"
+  },
   "body": "{\"honeypot\": \"has data\"}"
 }

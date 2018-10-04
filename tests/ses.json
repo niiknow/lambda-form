@@ -1,7 +1,0 @@
-{
-  "headers": {
-    "origin": "http://localhost:3000"
-  },
-  "body":
-    "{\"send_to\": \"receiver@email.com\",\"subject\": \"Receiver Test subject\",\"name\": \"Sender Name\",\"reply_to\": \"sender@email.com\",\"message\": \"Sender message\"}"
-}
