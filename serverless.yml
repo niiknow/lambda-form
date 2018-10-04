@@ -46,10 +46,10 @@ functions:
     handler: handler.formPostHandler
     events:
       - http:
-        method: post
-        path: form/{id}
-        cors: true
-        request:
-          parameters:
-            paths:
-              id: true
+          method: post
+          path: form/{id}
+          cors: true
+          request:
+            parameters:
+              paths:
+                id: true

@@ -1,0 +1,15 @@
+{
+    "smtp_from": "xxx",
+    "smtp_host": "xxx",
+    "smtp_user": "xxx",
+    "smtp_pass": "xxx",
+    "smtp_port": 587,
+    "business_name": "niiknow",
+    "validate_honeypot": "_yodawg",
+    "id": "demo",
+    "name": "Demo Contact Us",
+    "owner_email": "noogen@yahoo.com",
+    "owner_subject": "{{body.surname}} Contact Us Demo",
+    "email_user": "email",
+    "user_subject": "{{config.business_name}} Contact Form"
+}

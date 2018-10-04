@@ -53,3 +53,5 @@ env.yml
 
 # misc
 .DS_Store
+
+tests/*config.json

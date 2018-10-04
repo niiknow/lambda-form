@@ -16,8 +16,8 @@
         <div class="form-group form-inline">
           <label for="form_use">Specify the Submit method/behavior:</label> &nbsp;
           <select id="form_use" name="form_use" class="form-control">
-            <option value="1">Submit using Ajax</option>
-            <option value="2">Regular Form Submit</option>
+            <option value="1">With Ajax</option>
+            <option value="2">Without Ajax</option>
           </select>
         </div>
         <h1>Contact Us</h1>
@@ -25,7 +25,8 @@
         <p class="lead">Please fill out the fields below.</p>
 
 
-        <form id="contact-form" method="post" action="https://aws.lambda/endpoint/formid" role="form">
+        <form id="contact-form" method="post" action="https://yernxc8iak.execute-api.us-east-1.amazonaws.com/dev/form/demo" role="form">
+          <input type="hidden" name="_yodawg" />
 
           <div class="messages"></div>
 
