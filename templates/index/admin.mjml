@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Form {form.id}</mj-title>
+    <mj-title>Form {{config.id}}</mj-title>
     <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto:300,500"></mj-font>
     <mj-attributes>
       <mj-all font-family="Roboto, Helvetica, sans-serif"></mj-all>
@@ -11,21 +11,25 @@
   <mj-body>
     <mj-section padding="20px 0">
       <mj-column width="60%">
-        <mj-text font-size="10px">New submission @ {headers.origin}</mj-text>
+        <mj-text font-size="10px">New {{config.name}} submission @ {{headers.origin}}</mj-text>
       </mj-column>
       <mj-column width="40%">
-        <mj-text align="right">{form.config.business_name}</mj-text>
+        <mj-text align="right">{{config.business_name}}</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
+{% for field, content in body %}
       <mj-column>
         <mj-text>
           <h3 style="font-weight: bold; margin-top: 0; margin-bottom: 0">
-            Field Name
+            {{field}}
           </h3>
-          <p style="font-size: 14px">User Data</p>
+          <p style="font-size: 14px">
+            {{content}}
+          </p>
         </mj-text>
       </mj-column>
+{% endfor %}
     </mj-section>
   </mj-body>
 </mjml>

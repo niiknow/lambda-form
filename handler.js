@@ -1,14 +1,16 @@
 import fs from 'fs'
+import path from 'path'
 import url from 'url'
-import uuidv4 from 'uuid/v4'
 import consolidate from 'consolidate'
+import uuidv4 from 'uuid/v4'
 import reCaptcha from 'recaptcha2'
 
 import mailer from './lib/mailer'
-import saver from './lib/saver'
 import readconfig from './lib/readconfig'
+import saver from './lib/saver'
 
 const viewEngine = consolidate['nunjucks']
+const debug = require('debug')('lambda-form');
 
 export const formPostHandler = async (event, context, callback) => {
   const id         = event.params.id
@@ -17,14 +19,38 @@ export const formPostHandler = async (event, context, callback) => {
     'Access-Control-Allow-Origin': '*'
   }
 
-  // get form definition from url
-  const formDef = await readconfig(id)
-  formDef.name = formDef.name || ''
+  let form = null;
+  try {
+    // get form definition
+    form      = await readconfig(id)
+  } catch(e) {
+    debug(id, ' form retrieve error: ', e)
+
+    return callback(null, {
+      statusCode: 404,
+      headers: rspHeaders,
+      body: JSON.stringify({code: 404, message: `Please check to make sure form ${id} exists.`})
+    })
+  }
+
+  // apply defaults
+  form.name    = form.name || ''
+
+  // define context for view-engine
+  const locals = {
+    headers: event.headers,
+    body: event.body,
+    config: form,
+    id: uuidv4()
+  }
 
   // validate origins
-  const origins = ',' + (formDef.validate_origins || '').trim(',') + ','
+  const origins = ',' + (form.validate_origins || '').trim(',') + ','
   const origin  = (event.headers.origin || '').trim()
+
+  // if form.validate_origins then
   if (origins.length > 3) {
+    // if origin is empty or not valid, error
     if (origin.length < 4 || origins.indexOf(',' + url.parse(origin).hostname.toLowerCase() + ',') < 0) {
       return callback(null, {
         statusCode: 403,
@@ -34,25 +60,27 @@ export const formPostHandler = async (event, context, callback) => {
     }
   }
 
-  const postId = uuidv4();
-  const locals = {
-    headers: event.headers,
-    body: event.body,
-    config: formDef,
-    id: postId
+  // if honeypot is a field on this form, return false if it has a value
+  if (form.validate_honeypot && locals.body[form.validate_honeypot]) {
+    return callback(null, {
+      statusCode: 422,
+      headers: rspHeaders,
+      body: JSON.stringify({code: 422, message: 'Invalid robot submission.'})
+    })
   }
 
   // validate recaptcha
-  if (formDef.validate_recaptcha) {
-    const recaptcha = new reCaptcha({
-      siteKey: formDef.validate_recaptcha.site_key,
-      secretKey: formDef.validate_recaptcha.secret_key,
+  if (form.validate_recaptcha) {
+    const recap = new reCaptcha({
+      siteKey: form.validate_recaptcha.site_key,
+      secretKey: form.validate_recaptcha.secret_key,
       ssl: true
     });
-    const token = locals.body[formDef.validate_recaptcha.field || 'g-recaptcha-response']
+    const token = locals.body[form.validate_recaptcha.field || 'g-recaptcha-response']
     try {
-      await recaptcha.validate(token)
-    } catch (errorCodes) {
+      await recap.validate(token)
+    } catch (e) {
+      debug(id, ' recaptcha validate error: ', e)
       return callback(null, {
         statusCode: 422,
         headers: rspHeaders,
@@ -61,36 +89,44 @@ export const formPostHandler = async (event, context, callback) => {
     }
   }
 
-  // if honeypot is a field on this form, return false if it has a value
-  if (formDef.validate_honeypot && locals.body[formDef.validate_honeypot]) {
-    return callback(null, {
-      statusCode: 422,
-      headers: rspHeaders,
-      body: JSON.stringify({code: 422, message: 'Invalid robot submission.'})
-    })
-  }
-
   // render subject
-  const tplAdminSubject = formDef.admin_subject || `New form ${formDef.name} submission`
-  const tplUserSubject  = formDef.user_subject || tplAdminSubject
+  const tplAdminSubject = form.admin_subject || `New form ${form.name} submission`
+  const tplUserSubject  = form.user_subject || tplAdminSubject
   const userSubject     = await viewEngine.render(tplUserSubject, locals)
   const adminSubject    = await viewEngine.render(tplAdminSubject, locals)
 
-  // render content
-  const adminFile    = (formDef.admin_template || 'templates/index.mjml').trim()
-  const tplAdminBody = adminFile.endsWith('.mjml') ? fs.readFileSync(adminFile, 'utf8') : adminFile
+  // allow for template to be pass in as template name
+  const adminFile  = (form.admin_template || 'index/admin.mjml').trim()
+  const userFile   = (form.user_template || 'index/user.mjml').trim()
 
-  // TODO: for now, both user and admin body are the same - separate in the future
-  const adminBody = await viewEngine.render(tplAdminBody, locals)
-  const userBody  = adminBody
-  const userEmail = locals.body[locals.config.email_user]
+  // render body
+  const tplABody   = adminFile.endsWith('.mjml') ? fs.readFileSync(path.combine(__dirname, 'template/' + adminFile), 'utf8') : adminFile
+  const tplUBody   = userFile.endsWith('.mjml') ? fs.readFileSync(path.combine(__dirname, 'template/' + userFile), 'utf8') : userFile
+  const adminBody  = await viewEngine.render(tplABody, locals)
+  let userBody     = adminBody
+
+  if (tplUBody == tplABody) {
+    userBody = await viewEngine.render(tplUBody, locals)
+  }
+
+  const userEmail  = locals.body[locals.config.email_user]
+  const adminEmail = locals.body[locals.config.admin_email]
+  const persistAll = [saver(locals)]
 
   // send admin email
-  const promises = [mailer(locals, locals.smtp_to, adminSubject, adminBody), saver(locals)];
-  if (userEmail) {
-    promises.push(mailer(locals, userEmail, userSubject, userBody))
+  if (adminEmail) {
+    // admin reply go to user
+    persistAll.push(mailer(locals, adminEmail, adminSubject, adminBody, userEmail))
   }
-  await Promise.all(promises);
+
+  // send user email
+  if (userEmail) {
+    // user reply go to admin
+    persistAll.push(mailer(locals, userEmail, userSubject, userBody, adminEmail))
+  }
+
+  // execute all permistences
+  await Promise.all(persistAll);
 
   // handle redirect, possibly to thank you page
   if (locals.config.redir) {
@@ -104,8 +140,8 @@ export const formPostHandler = async (event, context, callback) => {
   }
 
   return callback(null, {
-    statusCode: 403,
+    statusCode: 200,
     headers: rspHeaders,
-    body: JSON.stringify({code: 403, message: `Invalid origin (${origin}) submission.`})
+    body: JSON.stringify({code: 200, message: `${id} submission accepted.`})
   })
 }
