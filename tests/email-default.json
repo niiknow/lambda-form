@@ -1,7 +1,5 @@
 {
-  "headers": {
-    "origin": "http://localhost:3000"
-  },
+  "headers": {},
   "pathParameters": {
     "id": "email-default"
   },

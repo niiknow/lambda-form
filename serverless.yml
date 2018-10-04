@@ -32,6 +32,7 @@ provider:
 
 package:
   exclude:
+    - forms/**
     - node_modules/**
     - tests/**
     - .babelrc

@@ -22,7 +22,7 @@ const debug      = require('debug')('lambda-form')
  */
 export const formPostHandler = async (event, context, callback) => {
   // possible use isNotJson to change respones to redirect instead of error json?
-  const isNotJson  = (event.headers['Content-Type'] === 'application/x-www-form-urlencoded')
+  const isNotJson  = event.headers && (event.headers['Content-Type'] === 'application/x-www-form-urlencoded')
   const id         = event.pathParameters.id
   const rspHeaders = {
     'Content-Type': 'application/json',

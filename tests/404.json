@@ -1,4 +1,5 @@
 {
+  "headers": {},
   "pathParameters": {
     "id": "404"
   },
