@@ -17,19 +17,18 @@ provider:
   runtime: nodejs8.10
   stage: dev
   region: us-east-1
-  # To load environment variables externally
-  # rename env.example to env.yml and uncomment
-  # the following line. Also, make sure to not
-  # commit your env.yml.
-  #
-  #environment: ${file(env.yml):${self:provider.stage}}
-  # This describes the permissions common to all the lambdas
   iamRoleStatements:
     - Effect: "Allow"
       Action:
         - "s3:*"
       Resource:
         - "*"
+  # To load environment variables externally
+  # rename env.example to env.yml and uncomment
+  # the following line. Also, make sure to not
+  # commit your env.yml.
+  #
+  environment: ${file(env.yml):${self:provider.stage}}
 
 package:
   exclude:
