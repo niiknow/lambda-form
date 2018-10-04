@@ -17,8 +17,8 @@
         <mj-text align="right">{{config.business_name}}</mj-text>
       </mj-column>
     </mj-section>
-    <mj-section>
 {% for field, content in body %}
+    <mj-section>
       <mj-column>
         <mj-text>
           <h3 style="font-weight: bold; margin-top: 0; margin-bottom: 0">
@@ -29,7 +29,7 @@
           </p>
         </mj-text>
       </mj-column>
-{% endfor %}
     </mj-section>
+{% endfor %}
   </mj-body>
 </mjml>
