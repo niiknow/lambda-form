@@ -38,6 +38,7 @@ Fill in the demo form with a real email and wait for result.
 - [x] Validate origin domain, recaptcha2, and honeypot
 - [x] Completely serverless, store form configuration and result on s3 
 - [x] Email sent are replyable, e.g. emails are sent with 'Reply-To' header *as on behalf of* the Owner/Submitter
+- [x] One of the biggest advantage is that form fields are not hardcoded.  It can take unlimited number of fields that are either *application/json or application/x-www-form-urlencoded*.  At the moment, there is no defined strategy to accept file upload/binary or multipart/form-data form type.
 
 # Why S3 and not directly into some database or sqs/sns?
 Because it is serverless and event triggerable.  SQS and SNS has a limit on the message size.
@@ -81,7 +82,7 @@ use-random-guid-for-best-form-id-performance/!config.json
     "validate_honeypot": "honeypot field name",
     "id": "some guid representing the form id",
     "name": "User friendly name for this form",
-    "owner_email": "who to notify user's sumission to",
+    "owner_email": "who to notify user's submission to",
     "owner_subject": "the subject to notify owner_email with",
     "owner_body": "actual mjml template or empty to use fallback/owner.mjml",
     "redir": "https://www.example.com/thank-you-page",
