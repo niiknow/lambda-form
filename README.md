@@ -100,9 +100,9 @@ use-random-guid-for-best-form-id-performance/!config.json
 * Remember, if you use application/x-www-form-urlencoded, you should set a redirection (redir property) to provide redirect result.
 
 # TODO/FUTURE ENHANCEMENTS
-- [ ] Filters to include or exclude fields so hidden form field won't come through to the email.
-- [ ] Per field validation with regex.
-- [ ] Handle Image/File form submit/upload.
+- [ ] Filters to include or exclude fields so hidden form field won't come through to the email
+- [ ] Per field validation - possibly use [Indicative](https://indicative.adonisjs.com/) for validation of json
+- [ ] Handle Image/File form submit/upload
 - [ ] Probably a plugin system to allow plugins enabling base on form config.  Possible plugins:  fallback with SES, more spam validation, ability to track email with google analytic pixel
 
 # Point of Interest
