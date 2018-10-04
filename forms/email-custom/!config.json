@@ -1,6 +1,3 @@
-# Schema Help
-
-```json
 {
     "smtp_from": "from email",
     "smtp_host": "mail.example.com",
@@ -27,4 +24,3 @@
     "user_body": "actual mjml template or empty to use fallback/user.mjml",
     "deleted_at": "if there is a value, then this form has been deleted"
 }
-```

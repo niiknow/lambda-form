@@ -4,7 +4,7 @@
     "debug": true
   },
   "pathParameters": {
-    "id": "honeypot"
+    "id": "origins"
   },
   "body": "{\"honeypot\": \"has data\"}"
 }

@@ -22,7 +22,7 @@ export const formPostHandler = async (event, context, callback) => {
   let form = null;
   try {
     // get form definition
-    form      = await readconfig(id)
+    form = await readconfig(id, event.headers.debug)
   } catch(e) {
     debug(id, ' form retrieve error: ', e)
 
@@ -30,6 +30,14 @@ export const formPostHandler = async (event, context, callback) => {
       statusCode: 404,
       headers: rspHeaders,
       body: JSON.stringify({code: 404, message: `Please check to make sure form ${id} exists.`})
+    })
+  }
+
+  if (form.deleted_at) {
+    return callback(null, {
+      statusCode: 404,
+      headers: rspHeaders,
+      body: JSON.stringify({code: 404, message: `Form ${id} no longer accept submission.`})
     })
   }
 
@@ -90,39 +98,39 @@ export const formPostHandler = async (event, context, callback) => {
   }
 
   // render subject
-  const tplAdminSubject = form.admin_subject || `New form ${form.name} submission`
-  const tplUserSubject  = form.user_subject || tplAdminSubject
+  const tplOwnerSubject = form.owner_subject || `New form ${form.name} submission`
+  const tplUserSubject  = form.user_subject || tplOwnerSubject
   const userSubject     = await viewEngine.render(tplUserSubject, locals)
-  const adminSubject    = await viewEngine.render(tplAdminSubject, locals)
+  const ownerSubject    = await viewEngine.render(tplOwnerSubject, locals)
 
   // allow for template to be pass in as template name
-  const adminFile  = (form.admin_template || 'index/admin.mjml').trim()
-  const userFile   = (form.user_template || 'index/user.mjml').trim()
+  const ownerFile  = (form.owner_template || 'fallback/owner.mjml').trim()
+  const userFile   = (form.user_template || 'fallback/user.mjml').trim()
 
   // render body
-  const tplABody   = adminFile.endsWith('.mjml') ? fs.readFileSync(path.combine(__dirname, 'template/' + adminFile), 'utf8') : adminFile
+  const tplOBody   = ownerFile.endsWith('.mjml') ? fs.readFileSync(path.combine(__dirname, 'template/' + ownerFile), 'utf8') : ownerFile
   const tplUBody   = userFile.endsWith('.mjml') ? fs.readFileSync(path.combine(__dirname, 'template/' + userFile), 'utf8') : userFile
-  const adminBody  = await viewEngine.render(tplABody, locals)
-  let userBody     = adminBody
+  const ownerBody  = await viewEngine.render(tplOBody, locals)
+  let userBody     = ownerBody
 
-  if (tplUBody == tplABody) {
+  if (tplOBody != tplUBody) {
     userBody = await viewEngine.render(tplUBody, locals)
   }
 
   const userEmail  = locals.body[locals.config.email_user]
-  const adminEmail = locals.body[locals.config.admin_email]
+  const ownerEmail = locals.body[locals.config.owner_email]
   const persistAll = [saver(locals)]
 
-  // send admin email
-  if (adminEmail) {
-    // admin reply go to user
-    persistAll.push(mailer(locals, adminEmail, adminSubject, adminBody, userEmail))
+  // send owner email
+  if (ownerEmail) {
+    // owner reply go to user
+    persistAll.push(mailer(locals, ownerEmail, ownerSubject, ownerBody, userEmail))
   }
 
   // send user email
   if (userEmail) {
-    // user reply go to admin
-    persistAll.push(mailer(locals, userEmail, userSubject, userBody, adminEmail))
+    // user reply go to owner
+    persistAll.push(mailer(locals, userEmail, userSubject, userBody, ownerEmail))
   }
 
   // execute all permistences
