@@ -1,6 +1,4 @@
 import fs from 'fs'
-import path from 'path'
-import url from 'url'
 import consolidate from 'consolidate'
 import uuidv4 from 'uuid/v4'
 import reCaptcha from 'recaptcha2'
@@ -23,7 +21,7 @@ const debug      = require('debug')('lambda-form')
  */
 export const formPostHandler = async (event, context, callback) => {
   // possible use isNotJson to change respones to redirect instead of error json?
-  const isNotJson  = event.headers && (event.headers['content-type'].indexOf('application/x-www-form-urlencoded') > -1)
+  const isNotJson  = event.headers && ((event.headers['content-type'] || '').indexOf('application/x-www-form-urlencoded') > -1)
   const id         = event.pathParameters.id
   const rspHeaders = {
     'Content-Type': 'application/json',
@@ -68,34 +66,27 @@ export const formPostHandler = async (event, context, callback) => {
       return callback(null, {
         statusCode: 422,
         headers: rspHeaders,
-        body: JSON.stringify({code: 422, message: `Invalid form data.`})
+        body: JSON.stringify({code: 422, message: 'Invalid form data.'})
       })
     }
   }
 
   // define context for view-engine
   const locals = {
-    headers: event.headers,
-    body: body,
+    headers: event.headers || {},
+    body: body || {},
     config: form,
     id: uuidv4(),
     stage: event.stageVariables || {}
   }
 
   // validate origins
-  const origins = ',' + (form.validate_origins || '').trim(',') + ','
-  const origin  = (event.headers.origin || '').trim()
-
-  // if form.validate_origins then
-  if (origins.length > 3) {
-    // if origin is empty or not valid, error
-    if (origin.length < 4 || origins.indexOf(',' + url.parse(origin).hostname.toLowerCase() + ',') < 0) {
-      return callback(null, {
-        statusCode: 403,
-        headers: rspHeaders,
-        body: JSON.stringify({code: 403, message: `Invalid origin (${origin}) submission.`})
-      })
-    }
+  if (!validator.validOrigin(locals)) {
+    return callback(null, {
+      statusCode: 403,
+      headers: rspHeaders,
+      body: JSON.stringify({code: 403, message: `Invalid origin (${locals.headers.origin}) submission.`})
+    })
   }
 
   // if honeypot is a field on this form, return false if it has a value
@@ -143,7 +134,7 @@ export const formPostHandler = async (event, context, callback) => {
     const tplOBody = ownerFile.endsWith('.mjml') ? fs.readFileSync('templates/' + ownerFile, 'utf-8') : ownerFile
     ownerBody      = await viewEngine.render(tplOBody, locals)
   } catch(e) {
-    debug(id, ' owner file read error ', tplOBody, e)
+    debug(id, ' owner file read error ', e)
 
     return callback(null, {
       statusCode: 500,
@@ -158,7 +149,7 @@ export const formPostHandler = async (event, context, callback) => {
       const tplUBody  = userFile.endsWith('.mjml') ? fs.readFileSync('templates/' + userFile, 'utf-8') : userFile
       userBody        = await viewEngine.render(tplUBody, locals)
     } catch(e) {
-      debug(id, ' submitter file read error ', tplUBody, e)
+      debug(id, ' submitter file read error ', e)
 
       return callback(null, {
         statusCode: 500,
