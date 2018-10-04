@@ -48,7 +48,7 @@ env.yml    - define environment variable such as FORMBUCKET
     "smtp_user": "username",
     "smtp_pass": "password",
     "smtp_port": 465,
-    "smtp_insecure": false,
+    "smtp_secure": false,
     "business_name": "niiknow",
     "validate_recaptcha": {
       "site_key": "the site key",

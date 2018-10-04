@@ -5,6 +5,7 @@ import consolidate from 'consolidate'
 import uuidv4 from 'uuid/v4'
 import reCaptcha from 'recaptcha2'
 import qs from 'qs'
+import nunjucks from 'nunjucks'
 
 import mailer from './lib/mailer'
 import readconfig from './lib/readconfig'
@@ -22,7 +23,7 @@ const debug      = require('debug')('lambda-form')
  */
 export const formPostHandler = async (event, context, callback) => {
   // possible use isNotJson to change respones to redirect instead of error json?
-  const isNotJson  = event.headers && (event.headers['Content-Type'] === 'application/x-www-form-urlencoded')
+  const isNotJson  = event.headers && (event.headers['content-type'].indexOf('application/x-www-form-urlencoded') > -1)
   const id         = event.pathParameters.id
   const rspHeaders = {
     'Content-Type': 'application/json',
@@ -30,9 +31,10 @@ export const formPostHandler = async (event, context, callback) => {
   }
 
   let form = null, body = event.body;
+  debug(id, ' raw form body ', body, ' header ', event.headers)
   try {
     // get form definition
-    form = await readconfig(id, event.stageVariables.debug)
+    form = await readconfig(id, (event.stageVariables || {}).debug)
   } catch(e) {
     debug(id, ' form retrieve error: ', e)
 
@@ -52,13 +54,22 @@ export const formPostHandler = async (event, context, callback) => {
   }
 
   // apply defaults
-  form.name    = form.name || ''
+  form.name = form.name || ''
   if (typeof(body) === 'string') {
-    if (isNotJson) {
-      body = qs.parse(body)
-    }
-    else {
-      body = JSON.parse(body)
+    try {
+      if (isNotJson) {
+        body = qs.parse(body)
+      }
+      else {
+        body = JSON.parse(body)
+      }
+    } catch(e) {
+      debug(id, ' error parsing form body ', e)
+      return callback(null, {
+        statusCode: 422,
+        headers: rspHeaders,
+        body: JSON.stringify({code: 422, message: `Invalid form data.`})
+      })
     }
   }
 
@@ -68,7 +79,7 @@ export const formPostHandler = async (event, context, callback) => {
     body: body,
     config: form,
     id: uuidv4(),
-    stage: event.stageVariables
+    stage: event.stageVariables || {}
   }
 
   // validate origins
@@ -119,8 +130,8 @@ export const formPostHandler = async (event, context, callback) => {
   // render subject
   const tplOwnerSubject = form.owner_subject || `New form ${form.name} submission`
   const tplUserSubject  = form.user_subject || tplOwnerSubject
-  const ownerSubject    = await viewEngine.render(tplOwnerSubject, locals)
-  const userSubject     = await viewEngine.render(tplUserSubject, locals)
+  const ownerSubject    = await nunjucks.renderString(tplOwnerSubject, locals)
+  const userSubject     = await nunjucks.renderString(tplUserSubject, locals)
 
   // allow for template to be pass in as template name
   const ownerFile = (form.owner_template || 'fallback/owner.mjml').trim()
@@ -163,12 +174,14 @@ export const formPostHandler = async (event, context, callback) => {
 
   // send owner email
   if (ownerEmail && validator.isEmail(ownerEmail)) {
+    debug(id, ' sending owner email ', ownerEmail)
     // owner reply go to user
     persistAll.push(mailer(locals, ownerEmail, ownerSubject, ownerBody, userEmail))
   }
 
   // send user email
   if (userEmail) {
+    debug(id, ' sending user email ', userEmail)
     // user reply go to owner
     persistAll.push(mailer(locals, userEmail, userSubject, userBody, ownerEmail))
   }
