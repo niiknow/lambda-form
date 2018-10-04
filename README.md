@@ -72,5 +72,12 @@ env.yml    - define environment variable such as FORMBUCKET
 
 # NOTE
 * AWS may block or limit sends from port 25, so you should use a different port.  It is also best to send with SSL only.
+* Outside of FORMBUCKET, there is no other config on the server. Each form configuration contain it's own SMTP setup.  Everything rely on you correctly setting up your FORM config.
+
+# TODO/FUTURE ENHANCEMENTS
+- [] Filters to include or exclude fields so hidden form field won't come through to the email.
+- [] Per field validation with regex.
+- [] Handle Image/File form submit/upload.
+- [] Probably a plugin system to allow plugins enabling base on form config.  Possible plugins:  fallback with SES, more spam validation, ability to track email with google analytic pixel
 
 # MIT
