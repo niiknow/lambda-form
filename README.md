@@ -5,7 +5,9 @@ A contact form usually send email to both Submitter and Form's Creator/Owner.  T
 
 - Deploy this function and create the associated s3 bucket to store form config and submissions.
 - Create the form config and upload to s3 bucket.  This can be done manually or by creating some kind of admin (outside the scope of this project).
-- Create the front-end of the form and submit to the endpoint.
+- Create the front-end of the form and submit to the endpoint.  Example: [Demo](https://niiknow.github.io/lambda-form/demo/)
+
+Fill in the demo form with some real email and wait for result.
 
 **Result**
 1. An email is sent to the Submitter
