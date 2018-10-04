@@ -11,8 +11,8 @@
       "secret_key": "the secret key",
       "field": "the form field name, default g-recaptcha-response"
     },
-    "validate_origins": "a comma separated list of valid origins",
-    "validate_honeypot": "honeypot field name",
+    "validate_origins": "*",
+    "validate_honeypot": "honeypot",
     "id": "some guid representing the form id",
     "name": "User friendly name for this form",
     "owner_email": "who to notify user's sumission to",
@@ -21,6 +21,5 @@
     "redir": "https://www.example.com/thank-you-page",
     "email_user": "identify the email field on the form to send a copy",
     "user_subject": "user subject, can be templated like owner_subject",
-    "user_body": "actual mjml template or empty to use fallback/user.mjml",
-    "deleted_at": "if there is a value, then this form has been deleted"
+    "user_body": "actual mjml template or empty to use fallback/user.mjml"
 }

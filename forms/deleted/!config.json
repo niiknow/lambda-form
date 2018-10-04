@@ -1,26 +1,3 @@
 {
-    "smtp_from": "from email",
-    "smtp_host": "mail.example.com",
-    "smtp_user": "username",
-    "smtp_pass": "password",
-    "smtp_port": 465,
-    "smtp_insecure": false,
-    "business_name": "niiknow",
-    "validate_recaptcha": {
-      "site_key": "the site key",
-      "secret_key": "the secret key",
-      "field": "the form field name, default g-recaptcha-response"
-    },
-    "validate_origins": "a comma separated list of valid origins",
-    "validate_honeypot": "honeypot field name",
-    "id": "some guid representing the form id",
-    "name": "User friendly name for this form",
-    "owner_email": "who to notify user's sumission to",
-    "owner_subject": "the subject to notify owner_email with",
-    "owner_body": "actual mjml template or empty to use fallback/owner.mjml",
-    "redir": "https://www.example.com/thank-you-page",
-    "email_user": "identify the email field on the form to send a copy",
-    "user_subject": "user subject, can be templated like owner_subject",
-    "user_body": "actual mjml template or empty to use fallback/user.mjml",
     "deleted_at": "if there is a value, then this form has been deleted"
 }

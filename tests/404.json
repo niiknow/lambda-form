@@ -1,0 +1,8 @@
+{
+  "pathParameters": {
+    "id": "404"
+  },
+  "stageVariables": {
+    "debug": true
+  }
+}

@@ -3,7 +3,7 @@
     "origin": "http://localhost:3000"
   },
   "pathParameters": {
-    "id": "honeypot"
+    "id": "deleted"
   },
   "body": "{\"honeypot\": \"has data\"}",
   "stageVariables": {

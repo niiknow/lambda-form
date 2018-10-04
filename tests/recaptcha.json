@@ -1,10 +1,12 @@
 {
   "headers": {
-    "origin": "http://localhost:3000",
-    "debug": true
+    "origin": "http://localhost:3000"
   },
   "pathParameters": {
     "id": "recaptcha"
   },
-  "body": "{\"honeypot\": \"has data\"}"
+  "body": "{\"x\": \"has data\"}",
+  "stageVariables": {
+    "debug": true
+  }
 }

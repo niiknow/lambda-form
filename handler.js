@@ -4,25 +4,26 @@ import url from 'url'
 import consolidate from 'consolidate'
 import uuidv4 from 'uuid/v4'
 import reCaptcha from 'recaptcha2'
+import qs from 'qs'
 
 import mailer from './lib/mailer'
 import readconfig from './lib/readconfig'
 import saver from './lib/saver'
 
 const viewEngine = consolidate['nunjucks']
-const debug = require('debug')('lambda-form');
+const debug      = require('debug')('lambda-form')
 
 export const formPostHandler = async (event, context, callback) => {
-  const id         = event.params.id
+  const id         = event.pathParameters.id
   const rspHeaders = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
   }
 
-  let form = null;
+  let form = null, body = event.body;
   try {
     // get form definition
-    form = await readconfig(id, event.headers.debug)
+    form = await readconfig(id, event.stageVariables.debug)
   } catch(e) {
     debug(id, ' form retrieve error: ', e)
 
@@ -43,13 +44,22 @@ export const formPostHandler = async (event, context, callback) => {
 
   // apply defaults
   form.name    = form.name || ''
+  if (typeof(body) === 'string') {
+    if (event.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+      body = qs.parse(body)
+    }
+    else {
+      body = JSON.parse(body)
+    }
+  }
 
   // define context for view-engine
   const locals = {
     headers: event.headers,
-    body: event.body,
+    body: body,
     config: form,
-    id: uuidv4()
+    id: uuidv4(),
+    stage: event.stageVariables
   }
 
   // validate origins
@@ -69,11 +79,11 @@ export const formPostHandler = async (event, context, callback) => {
   }
 
   // if honeypot is a field on this form, return false if it has a value
-  if (form.validate_honeypot && locals.body[form.validate_honeypot]) {
+  if (form.validate_honeypot && body[form.validate_honeypot]) {
     return callback(null, {
       statusCode: 422,
       headers: rspHeaders,
-      body: JSON.stringify({code: 422, message: 'Invalid robot submission.'})
+      body: JSON.stringify({code: 422, message: 'Missing data in submission.'})
     })
   }
 
@@ -84,7 +94,7 @@ export const formPostHandler = async (event, context, callback) => {
       secretKey: form.validate_recaptcha.secret_key,
       ssl: true
     });
-    const token = locals.body[form.validate_recaptcha.field || 'g-recaptcha-response']
+    const token = body[form.validate_recaptcha.field || 'g-recaptcha-response']
     try {
       await recap.validate(token)
     } catch (e) {
@@ -100,25 +110,46 @@ export const formPostHandler = async (event, context, callback) => {
   // render subject
   const tplOwnerSubject = form.owner_subject || `New form ${form.name} submission`
   const tplUserSubject  = form.user_subject || tplOwnerSubject
-  const userSubject     = await viewEngine.render(tplUserSubject, locals)
   const ownerSubject    = await viewEngine.render(tplOwnerSubject, locals)
+  const userSubject     = await viewEngine.render(tplUserSubject, locals)
 
   // allow for template to be pass in as template name
-  const ownerFile  = (form.owner_template || 'fallback/owner.mjml').trim()
-  const userFile   = (form.user_template || 'fallback/user.mjml').trim()
+  const ownerFile = (form.owner_template || 'fallback/owner.mjml').trim()
+  const userFile  = (form.user_template || 'fallback/user.mjml').trim()
 
   // render body
-  const tplOBody   = ownerFile.endsWith('.mjml') ? fs.readFileSync(path.combine(__dirname, 'template/' + ownerFile), 'utf8') : ownerFile
-  const tplUBody   = userFile.endsWith('.mjml') ? fs.readFileSync(path.combine(__dirname, 'template/' + userFile), 'utf8') : userFile
-  const ownerBody  = await viewEngine.render(tplOBody, locals)
-  let userBody     = ownerBody
+  let ownerBody = null
+  try {
+    const tplOBody = ownerFile.endsWith('.mjml') ? fs.readFileSync('templates/' + ownerFile, 'utf-8') : ownerFile
+    ownerBody      = await viewEngine.render(tplOBody, locals)
+  } catch(e) {
+    debug(id, ' owner file read error ', tplOBody, e)
 
-  if (tplOBody != tplUBody) {
-    userBody = await viewEngine.render(tplUBody, locals)
+    return callback(null, {
+      statusCode: 500,
+      headers: rspHeaders,
+      body: JSON.stringify({code: 500, message: `Form ${id} error in owner template.`})
+    })
   }
 
-  const userEmail  = locals.body[locals.config.email_user]
-  const ownerEmail = locals.body[locals.config.owner_email]
+  let userBody  = ownerBody
+  if (ownerFile != userFile) {
+    try {
+      const tplUBody  = userFile.endsWith('.mjml') ? fs.readFileSync('templates/' + userFile, 'utf-8') : userFile
+      userBody        = await viewEngine.render(tplUBody, locals)
+    } catch(e) {
+      debug(id, ' submitter file read error ', tplUBody, e)
+
+      return callback(null, {
+        statusCode: 500,
+        headers: rspHeaders,
+        body: JSON.stringify({code: 500, message: `Form ${id} error in submitter template.`})
+      })
+    }
+  }
+
+  const userEmail  = body[form.email_user]
+  const ownerEmail = body[form.owner_email]
   const persistAll = [saver(locals)]
 
   // send owner email

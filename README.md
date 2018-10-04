@@ -11,11 +11,11 @@ A contact form usually send email to both Submitter and Form's Creator/Owner.  T
 1. An email is sent to the Submitter
 2. An email is sent to the Owner
 3. A form submission record is stored on S3 with the extension '.all'
-A subsequent trigger can be setup to store form result somewhere else or execute another lambda function to store on Amazon Aurora Serverless (https://aws.amazon.com/rds/aurora/serverless/)
+4. A subsequent s3 event trigger another lamba and store this data somewhere or on [Amazon Aurora Serverless](https://aws.amazon.com/rds/aurora/serverless/)
 
 **bot deterrent features**
-- Define a honeypot field in form and hide on the front-end to protect from generic spam bot - if you ever run a wordpress blog, there are bots that go around to autofill form and comments with spam messages.
-- Define origins to protect form from being post from unknown website.
+- Define a honeypot hidden input to protect from generic spam bot - if you ever run a wordpress blog, you may find that there are these bots that go around to auto-submit form and comments with spam messages.
+- Define origins to protect post from unknown website.
 - Define and place google recaptcha to prevent more advanced bots.
 
 ## Tech Stacks

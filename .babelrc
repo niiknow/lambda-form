@@ -1,8 +1,11 @@
 {
-  "plugins": ["source-map-support", "transform-runtime"],
+  "plugins": ["source-map-support", "@babel/plugin-transform-runtime"],
   "presets": [
-    ["env", { "node": "8.10" }],
-    "stage-3"
+    ["@babel/preset-env", {
+      "targets": {
+        "node": "8.10"
+      }
+    }]
   ],
   "env": {
     "production": {
@@ -12,13 +15,13 @@
     "development": {
       "retainLines": true,
       "plugins": [
-        "transform-runtime"
+        "@babel/plugin-transform-runtime"
       ]
     },
     "test": {
       "retainLines": true,
       "plugins": [
-        "transform-runtime",
+        "@babel/plugin-transform-runtime",
         "istanbul"
       ]
     }

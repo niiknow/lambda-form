@@ -3,9 +3,9 @@
     "origin": "http://localhost:3000"
   },
   "pathParameters": {
-    "id": "honeypot"
+    "id": "email-default"
   },
-  "body": "{\"honeypot\": \"has data\"}",
+  "body": "{\"yo\": \"dawg\",\"yoyo\": \"snoopy\",\"yoyoyo\": \"dog\",\"email\": \"snoop@doggie.dog\"}",
   "stageVariables": {
     "debug": true
   }
