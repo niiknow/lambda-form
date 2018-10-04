@@ -28,7 +28,7 @@ export const formPostHandler = async (event, context, callback) => {
     'Access-Control-Allow-Origin': '*'
   }
 
-  let form = null, body = event.body;
+  let form = null, body = event.body, redir = (event.queryStringParameters || {}).redir
   debug(id, ' raw form body ', body, ' header ', event.headers)
   try {
     // get form definition
@@ -52,6 +52,7 @@ export const formPostHandler = async (event, context, callback) => {
   }
 
   // apply defaults
+  redir     = redir || form.redir
   form.name = form.name || ''
   if (typeof(body) === 'string') {
     try {
@@ -77,8 +78,10 @@ export const formPostHandler = async (event, context, callback) => {
     body: body || {},
     config: form,
     id: uuidv4(),
-    stage: event.stageVariables || {}
+    stage: event.stageVariables || {},
+    query: event.queryStringParameters || {}
   }
+  redir = redir || form.redir
 
   // validate origins
   if (!validator.validOrigin(locals)) {
@@ -181,11 +184,11 @@ export const formPostHandler = async (event, context, callback) => {
   await Promise.all(persistAll);
 
   // handle redirect, possibly to thank you page
-  if (locals.config.redir) {
+  if (redir) {
     return callback(null, {
       statusCode: 301,
       headers: {
-        Location: locals.config.redir,
+        Location: redir,
       },
       body: '',
     })
