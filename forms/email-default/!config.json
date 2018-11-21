@@ -7,11 +7,12 @@
     "smtp_secure": false,
     "business_name": "niiknow",
     "validate_origins": "*",
-    "validate_honeypot": "honeypot field name",
+    "validate_honeypot": "_asdf",
     "id": "some guid representing the form id",
     "name": "User friendly name for this form",
     "owner_email": "user@example.com",
     "owner_subject": "the subject to notify owner_email with",
     "email_user": "email",
-    "user_subject": "user subject, can be templated like owner_subject"
+    "user_subject": "user subject, can be templated like owner_subject",
+    "field_exclude_regex": "^_"
 }

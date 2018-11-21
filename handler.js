@@ -125,15 +125,17 @@ export const formPostHandler = async (event, context, callback) => {
 
   // exclude fields
   if (form.field_exclude_regex) {
-    newBody = {}
-    const regex = new RegExp(form.field_exclude_regex)
+    const newBody = {}
+    const regex   = new RegExp(form.field_exclude_regex)
 
-    for(const f in locals.body) {
-      if (!regex.test(f))
+    Object.keys(locals.body).forEach((k) => {
+      // debug(k, ' key ', form.field_exclude_regex)
+      if (!regex.test(k))
       {
-        newBody[f] = locals.body[f]
+        // debug(k, ' match ')
+        newBody[k] = locals.body[k]
       }
-    }
+    })
 
     locals.body = newBody
   }

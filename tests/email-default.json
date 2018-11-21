@@ -3,7 +3,7 @@
   "pathParameters": {
     "id": "email-default"
   },
-  "body": "{\"yo\": \"dawg\",\"yoyo\": \"snoopy\",\"yoyoyo\": \"dog\",\"email\": \"snoop@doggie.dog\"}",
+  "body": "{\"_asdf\": \"\", \"yo\": \"dawg\",\"yoyo\": \"snoopy\",\"yoyoyo\": \"dog\",\"email\": \"snoop@doggie.dog\"}",
   "stageVariables": {
     "debug": true
   }
