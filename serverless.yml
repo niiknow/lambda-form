@@ -39,7 +39,6 @@ provider:
 package:
   exclude:
     - demo/**
-    - forms/**
     - node_modules/**
     - tests/**
     - .babelrc
