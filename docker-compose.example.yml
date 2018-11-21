@@ -3,7 +3,6 @@ services:
   lambdaform:
     build: .
     restart: always
-    command: "npm run prod"
     ports:
       - '5000:5000'
     environment:
