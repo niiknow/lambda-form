@@ -1,0 +1,14 @@
+version: '3'
+services:
+  lambdaform:
+    build:
+      context: .
+    restart: always
+    ports:
+      - '5000:5000'
+    environment:
+      # AWS access credentials
+      - AWS_ACCESS_KEY_ID=XXXXXXXXXX
+      - AWS_SECRET_ACCESS_KEY=XXXXXXXXXX
+      # AWS S3 configuration
+      - FORMBUCKET=XXXXXXXXXX
