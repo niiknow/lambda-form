@@ -14,7 +14,9 @@ Fill out the demo form with a real email and wait for result.
 2. An email is sent to the Owner
 3. A form submission record is stored on S3 with the extension '.submit'
 
-**Bot/Span deterrent features**
+![](https://raw.githubusercontent.com/niiknow/lambda-form/master/demo/lambda-form.jpg?raw=true)
+
+**Bot/Spam deterrent features**
 - Define a honeypot hidden input to protect from generic spam bot - if run any kind of commentable blog/website, you've probably seen bots that auto-submit these forms with spam.  Honeypot help deny majority of these dumb bots.
 - Define website origins to protect being use with unknown website.
 - Setup recaptcha to prevent smarter bots.
