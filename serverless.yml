@@ -3,8 +3,8 @@ service: lambda-form
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
   - serverless-webpack
-  - serverless-offline
   - serverless-plugin-existing-s3
+  - serverless-offline
 
 # serverless-webpack configuration
 # Enable auto-packing of external modules
@@ -12,11 +12,16 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
+  serverless-offline:
+    host: 0.0.0.0
+    port: 5000
+    corsAllowOrigin: "*"
+    corsAllowHeaders: "Origin, X-Requested-With, Content-Type, Accept"
 
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   region: us-east-1
   iamRoleStatements:
     - Effect: "Allow"

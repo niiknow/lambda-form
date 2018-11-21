@@ -1,9 +1,9 @@
 version: '3'
 services:
   lambdaform:
-    build:
-      context: .
+    build: .
     restart: always
+    command: "npm run prod"
     ports:
       - '5000:5000'
     environment:

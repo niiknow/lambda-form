@@ -18,5 +18,3 @@ RUN cd /usr/local/lambdaform \
   && git clone https://github.com/niiknow/lambda-form --branch ${LAMBDA_FORM_VERSION} /usr/local/lambdaform/app \
   && cd app && npm install
 WORKDIR /usr/local/lambdaform/app
-
-ENTRYPOINT [ "node", "--inspect=0.0.0.0:9777", "--nolazy", "./node_modules/.bin/sls", "offline", "start", "--host", "0.0.0.0", "--port", "5000", "--corsAllowOrigin", "*" ]
