@@ -9,6 +9,7 @@ import mailer from './lib/mailer'
 import readconfig from './lib/readconfig'
 import saver from './lib/saver'
 import validator from './lib/validator'
+import submission from './lib/submission'
 
 const viewEngine = consolidate['nunjucks']
 const debug      = require('debug')('lambda-form')
@@ -216,3 +217,5 @@ export const formPostHandler = async (event, context, callback) => {
     body: JSON.stringify({code: 200, message: `${id} submission accepted.`})
   })
 }
+
+export const submissionHandler = submission

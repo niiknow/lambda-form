@@ -4,6 +4,7 @@ service: lambda-form
 plugins:
   - serverless-webpack
   - serverless-offline
+  - serverless-plugin-existing-s3
 
 # serverless-webpack configuration
 # Enable auto-packing of external modules
@@ -46,10 +47,20 @@ functions:
     handler: handler.formPostHandler
     events:
       - http:
-          method: post
-          path: form/{id}
-          cors: true
-          request:
-            parameters:
-              paths:
-                id: true
+            method: post
+            path: form/{id}
+            cors: true
+            request:
+              parameters:
+                paths:
+                  id: true
+
+  submissionHandler:
+    handler: handler.submissionHandler
+    events:
+      - existingS3:
+            bucket: ${file(env.yml):${self:provider.stage}.FORMBUCKET}
+            events:
+              - s3:ObjectCreated:*
+            rules:
+              - suffix: .submit
