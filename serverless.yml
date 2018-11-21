@@ -38,14 +38,18 @@ provider:
 
 package:
   exclude:
+    - demo/**
     - forms/**
     - node_modules/**
     - tests/**
     - .babelrc
+    - .d*
     - .e*
     - .g*
     - .git/**
     - .DS_*
+    - docker*.yml
+    - run-*.sh
 
 functions:
   formPostHandler:
