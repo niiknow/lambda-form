@@ -55,3 +55,5 @@ env.yml
 .DS_Store
 
 tests/*config.json
+docker-compose.yml
+

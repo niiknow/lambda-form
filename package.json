@@ -4,7 +4,7 @@
   "description": "A form submission handler using Serverless and AWS Lambda",
   "main": "handler.js",
   "scripts": {
-    "deploy": "sls deploy --stage dev && sls s3deploy --stage dev",
+    "deploy": "sls deploy && sls s3deploy",
     "deploy-prod": "sls deploy --stage prod && sls s3deploy --stage prod",
     "lint": "eslint --ext .js,.jsx ./",
     "lint-fix": "eslint --fix --ext .js,.jsx ./",
