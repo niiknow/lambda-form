@@ -83,6 +83,7 @@ export const formPostHandler = async (event, context, callback) => {
   }
   redir = redir || form.redir
 
+
   // validate origins
   if (!validator.validOrigin(locals)) {
     return callback(null, {
@@ -119,6 +120,21 @@ export const formPostHandler = async (event, context, callback) => {
         body: JSON.stringify({code: 422, message: `Invalid captcha (${token}) response.`})
       })
     }
+  }
+
+  // exclude fields
+  if (form.field_exclude_regex) {
+    newBody = {}
+    const regex = new RegExp(form.field_exclude_regex)
+
+    for(const f in locals.body) {
+      if (!regex.test(f))
+      {
+        newBody[f] = locals.body[f]
+      }
+    }
+
+    locals.body = newBody
   }
 
   // render subject
@@ -180,7 +196,7 @@ export const formPostHandler = async (event, context, callback) => {
     persistAll.push(mailer(locals, userEmail, userSubject, userBody, ownerEmail))
   }
 
-  // execute all permistences
+  // execute all persistences
   await Promise.all(persistAll);
 
   // handle redirect, possibly to thank you page

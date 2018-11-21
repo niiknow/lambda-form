@@ -12,5 +12,6 @@
     "name": "Demo Contact Us",
     "owner_subject": "{{body.surname}} Contact Us Demo",
     "email_user": "email",
-    "user_subject": "{{config.business_name}} Contact Form"
+    "user_subject": "{{config.business_name}} Contact Form",
+    "field_exclude_regex": "_*"
 }
