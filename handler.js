@@ -5,7 +5,6 @@ import reCaptcha from 'recaptcha2'
 import qs from 'qs'
 import nunjucks from 'nunjucks'
 
-import mailer from './lib/mailer'
 import readconfig from './lib/readconfig'
 import saver from './lib/saver'
 import validator from './lib/validator'
@@ -143,18 +142,18 @@ export const formPostHandler = async (event, context, callback) => {
   // render subject
   const tplOwnerSubject = form.owner_subject || `New form ${form.name} submission`
   const tplUserSubject  = form.user_subject || tplOwnerSubject
-  const ownerSubject    = await nunjucks.renderString(tplOwnerSubject, locals)
-  const userSubject     = await nunjucks.renderString(tplUserSubject, locals)
+  locals.ownerSubject   = await nunjucks.renderString(tplOwnerSubject, locals)
+  locals.userSubject    = await nunjucks.renderString(tplUserSubject, locals)
 
   // allow for template to be pass in as template name
   const ownerFile = (form.owner_template || 'fallback/owner.mjml').trim()
   const userFile  = (form.user_template || 'fallback/user.mjml').trim()
 
   // render body
-  let ownerBody = null
+  locals.ownerBody = null
   try {
-    const tplOBody = ownerFile.endsWith('.mjml') ? fs.readFileSync('templates/' + ownerFile, 'utf-8') : ownerFile
-    ownerBody      = await viewEngine.render(tplOBody, locals)
+    const tplOBody   = ownerFile.endsWith('.mjml') ? fs.readFileSync('templates/' + ownerFile, 'utf-8') : ownerFile
+    locals.ownerBody = await viewEngine.render(tplOBody, locals)
   } catch(e) {
     debug(id, ' owner file read error ', e)
 
@@ -165,11 +164,11 @@ export const formPostHandler = async (event, context, callback) => {
     })
   }
 
-  let userBody  = ownerBody
+  locals.userBody = locals.ownerBody
   if (ownerFile != userFile) {
     try {
       const tplUBody  = userFile.endsWith('.mjml') ? fs.readFileSync('templates/' + userFile, 'utf-8') : userFile
-      userBody        = await viewEngine.render(tplUBody, locals)
+      locals.userBody = await viewEngine.render(tplUBody, locals)
     } catch(e) {
       debug(id, ' submitter file read error ', e)
 
@@ -181,23 +180,7 @@ export const formPostHandler = async (event, context, callback) => {
     }
   }
 
-  const userEmail  = validator.isEmail(body[form.email_user]) ? body[form.email_user] : null
-  const ownerEmail = form.owner_email
   const persistAll = [saver(locals)]
-
-  // send owner email
-  if (ownerEmail && validator.isEmail(ownerEmail)) {
-    debug(id, ' sending owner email ', ownerEmail)
-    // owner reply go to user
-    persistAll.push(mailer(locals, ownerEmail, ownerSubject, ownerBody, userEmail))
-  }
-
-  // send user email
-  if (userEmail) {
-    debug(id, ' sending user email ', userEmail)
-    // user reply go to owner
-    persistAll.push(mailer(locals, userEmail, userSubject, userBody, ownerEmail))
-  }
 
   // execute all persistences
   await Promise.all(persistAll);
