@@ -10,9 +10,12 @@ A contact form usually email both Submitter and Form's Creator/Owner.  This Serv
 Fill out the demo form with a real email and wait for result.
 
 **Result**
-1. An email is sent to the Submitter
-2. An email is sent to the Owner
-3. A form submission record is stored on S3 with the extension '.submit'
+1. A form submission record is stored on S3 with the extension '.submit'
+2. All files are stored in the same location under the form-id/submission-id/filename.extension
+3. FUTURE: process stripe transaction.
+
+**S3 Trigger**
+1. At the moment, it sends email to Owner and User.
 
 ![](https://raw.githubusercontent.com/niiknow/lambda-form/master/demo/lambda-form.jpg?raw=true)
 
@@ -79,7 +82,7 @@ provider:
 - [x] Validate origin domain, recaptcha2, and honeypot
 - [x] Completely serverless, store and read configuration and result on s3 
 - [x] Email sent are replyable, e.g. email sent with 'Reply-To' header *as on behalf of* the Owner/Submitter
-- [x] support multipart/form-data (file upload) - max payload of 10 MB - impose by [AWS Limit](https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html).
+- [x] Support multipart/form-data (file upload) - max payload of 10 MB - impose by [AWS Limit](https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html).
 
 # Why S3 and not directly into some database or sqs/sns?
 Because it is Serverless and event triggerable.  SQS and SNS has a limit on message size.

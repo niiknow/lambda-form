@@ -184,11 +184,11 @@ export const formPostHandler = async (event, context, callback) => {
     }
   }
 
-  // do file upload and persist the result at the same time
-  tasks.push(saver(locals))
+  // do file upload, future: stripe charges
+  await Promise.all(tasks);
 
   // execute all persistences
-  await Promise.all(tasks);
+  await saver(locals)
 
   // handle redirect, possibly to thank you page
   if (redir) {
