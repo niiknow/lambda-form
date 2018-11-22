@@ -10,6 +10,7 @@ import saver from './lib/saver'
 import validator from './lib/validator'
 import submission from './lib/submission'
 import formparser from './lib/formparser'
+import uploadfile from './lib/uploadfile'
 
 const viewEngine = consolidate['nunjucks']
 const debug      = require('debug')('lambda-form')
@@ -27,12 +28,13 @@ export const formPostHandler = async (event, context, callback) => {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
   }
+  const tasks      = []
 
   let form = null,
     body = event.body,
     redir = (event.queryStringParameters || {}).redir
 
-  debug(id, ' raw form body ', body, ' header ', event.headers)
+  debug(id, ' header ', event.headers)
   try {
     // get form definition
     form = await readconfig(id, (event.stageVariables || {}).debug)
@@ -60,7 +62,7 @@ export const formPostHandler = async (event, context, callback) => {
   const pf  = await formparser(event)
   body      = pf.fields
 
-  debug(id, ' parsed post ', pf)
+  debug(id, ' fields ', pf.fields, ' files ', pf.files)
 
   // define context for view-engine
   const locals = {
@@ -68,10 +70,10 @@ export const formPostHandler = async (event, context, callback) => {
     body: body || {},
     config: form,
     id: uuidv4(),
+    files: {},
     stage: event.stageVariables || {},
     query: event.queryStringParameters || {}
   }
-  redir = redir || form.redir
 
   // validate origins
   if (!validator.validOrigin(locals)) {
@@ -128,6 +130,19 @@ export const formPostHandler = async (event, context, callback) => {
     locals.body = newBody
   }
 
+  // parsing files
+  Object.keys(pf.files || {}).forEach((k) => {
+    const f  = pf.files[k]
+    const fi = {
+      key: `${id}/${locals.id}/${k}-${f.File.name}`,
+      ref: k,
+      bucket: process.env.FORMBUCKET
+    }
+    locals.files[k] = fi
+
+    tasks.push(uploadfile(fi, f.File))
+  })
+
   // render subject
   const tplOwnerSubject = form.owner_subject || `New form ${form.name} submission`
   const tplUserSubject  = form.user_subject || tplOwnerSubject
@@ -169,10 +184,11 @@ export const formPostHandler = async (event, context, callback) => {
     }
   }
 
-  const persistAll = [saver(locals)]
+  // do file upload and persist the result at the same time
+  tasks.push(saver(locals))
 
   // execute all persistences
-  await Promise.all(persistAll);
+  await Promise.all(tasks);
 
   // handle redirect, possibly to thank you page
   if (redir) {

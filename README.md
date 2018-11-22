@@ -79,7 +79,7 @@ provider:
 - [x] Validate origin domain, recaptcha2, and honeypot
 - [x] Completely serverless, store and read configuration and result on s3 
 - [x] Email sent are replyable, e.g. email sent with 'Reply-To' header *as on behalf of* the Owner/Submitter
-- [ ] At the moment, there is no defined strategy to accept binary file upload or multipart/form-data form type.
+- [x] support multipart/form-data (file upload) - max payload of 10 MB - impose by [AWS Limit](https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html).
 
 # Why S3 and not directly into some database or sqs/sns?
 Because it is Serverless and event triggerable.  SQS and SNS has a limit on message size.
@@ -113,7 +113,7 @@ use-random-guid-for-best-form-id-performance/!config.json
     "smtp_host": "mail.example.com",
     "smtp_user": "username",
     "smtp_pass": "password",
-    "smtp_port": 465,
+    "smtp_port": 587,
     "smtp_secure": false,
     "business_name": "niiknow",
     "validate_recaptcha": {

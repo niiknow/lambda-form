@@ -9,5 +9,6 @@ services:
       # AWS access credentials
       - AWS_ACCESS_KEY_ID=XXXXXXXXXX
       - AWS_SECRET_ACCESS_KEY=XXXXXXXXXX
+      - AWS_DEFAULT_REGION=us-east-1
       # AWS S3 configuration
       - FORMBUCKET=XXXXXXXXXX

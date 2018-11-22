@@ -25,6 +25,7 @@
     "consolidate": "^0.15.1",
     "debug": "^4.1.0",
     "formidable": "^1.2.1",
+    "gzip": "^0.1.0",
     "mjml": "^4.2.0",
     "nodemailer": "^4.7.0",
     "nunjucks": "^3.1.4",
