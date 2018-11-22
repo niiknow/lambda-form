@@ -28,7 +28,6 @@ export const formPostHandler = async (event, context, callback) => {
     'Access-Control-Allow-Origin': '*'
   }
 
-
   let form = null,
     body = event.body,
     redir = (event.queryStringParameters || {}).redir
