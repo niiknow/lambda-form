@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:8.10
 LABEL maintainer="noogen <friends@niiknow.org>"
 ENV NPM_CONFIG_LOGLEVEL=warn \
   LAMBDA_FORM_VERSION=1.1.3

@@ -1,10 +1,13 @@
 {
-  "headers": {},
+  "headers": {
+    "content-type": "application/json"
+  },
   "pathParameters": {
     "id": "email-default"
   },
   "body": "{\"_asdf\": \"\", \"yo\": \"dawg\",\"yoyo\": \"snoopy\",\"yoyoyo\": \"dog\",\"email\": \"snoop@doggie.dog\"}",
   "stageVariables": {
     "debug": true
-  }
+  },
+  "requestContext": {}
 }

@@ -9,6 +9,7 @@ import readconfig from './lib/readconfig'
 import saver from './lib/saver'
 import validator from './lib/validator'
 import submission from './lib/submission'
+import formparser from './lib/formparser'
 
 const viewEngine = consolidate['nunjucks']
 const debug      = require('debug')('lambda-form')
@@ -21,14 +22,17 @@ const debug      = require('debug')('lambda-form')
  */
 export const formPostHandler = async (event, context, callback) => {
   // possible use isNotJson to change respones to redirect instead of error json?
-  const isNotJson  = event.headers && ((event.headers['content-type'] || '').indexOf('application/x-www-form-urlencoded') > -1)
   const id         = event.pathParameters.id
   const rspHeaders = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
   }
 
-  let form = null, body = event.body, redir = (event.queryStringParameters || {}).redir
+
+  let form = null,
+    body = event.body,
+    redir = (event.queryStringParameters || {}).redir
+
   debug(id, ' raw form body ', body, ' header ', event.headers)
   try {
     // get form definition
@@ -54,23 +58,10 @@ export const formPostHandler = async (event, context, callback) => {
   // apply defaults
   redir     = redir || form.redir
   form.name = form.name || ''
-  if (typeof(body) === 'string') {
-    try {
-      if (isNotJson) {
-        body = qs.parse(body)
-      }
-      else {
-        body = JSON.parse(body)
-      }
-    } catch(e) {
-      debug(id, ' error parsing form body ', e)
-      return callback(null, {
-        statusCode: 422,
-        headers: rspHeaders,
-        body: JSON.stringify({code: 422, message: 'Invalid form data.'})
-      })
-    }
-  }
+  const pf  = await formparser(event)
+  body      = pf.fields
+
+  debug(id, ' parsed post ', pf)
 
   // define context for view-engine
   const locals = {
@@ -82,7 +73,6 @@ export const formPostHandler = async (event, context, callback) => {
     query: event.queryStringParameters || {}
   }
   redir = redir || form.redir
-
 
   // validate origins
   if (!validator.validOrigin(locals)) {

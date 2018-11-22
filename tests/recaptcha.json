@@ -1,10 +1,13 @@
 {
-  "headers": {},
+  "headers": {
+    "content-type": "application/json"
+  },
   "pathParameters": {
     "id": "recaptcha"
   },
   "body": "{\"x\": \"has data\"}",
   "stageVariables": {
     "debug": true
-  }
+  },
+  "requestContext": {}
 }

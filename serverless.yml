@@ -17,6 +17,11 @@ custom:
     port: 5000
     corsAllowOrigin: "*"
     corsAllowHeaders: "Origin, X-Requested-With, Content-Type, Accept"
+  apigwBinary:
+    types:
+      - 'application/json'
+      - 'multipart/form-data'
+      - 'application/x-www-form-urlencoded'
 
 provider:
   name: aws

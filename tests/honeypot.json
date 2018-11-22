@@ -1,10 +1,13 @@
 {
-  "headers": {},
+  "headers": {
+    "content-type": "application/json"
+  },
   "pathParameters": {
     "id": "honeypot"
   },
   "body": "{\"honeypot\": \"has data\"}",
   "stageVariables": {
     "debug": true
-  }
+  },
+  "requestContext": {}
 }

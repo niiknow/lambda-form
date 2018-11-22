@@ -1,9 +1,12 @@
 {
-  "headers": {},
+  "headers": {
+    "content-type": "application/json"
+  },
   "pathParameters": {
     "id": "404"
   },
   "stageVariables": {
     "debug": true
-  }
+  },
+  "requestContext": {}
 }
