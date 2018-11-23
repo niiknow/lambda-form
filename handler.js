@@ -2,7 +2,6 @@ import fs from 'fs'
 import consolidate from 'consolidate'
 import uuidv4 from 'uuid/v4'
 import reCaptcha from 'recaptcha2'
-import qs from 'qs'
 import nunjucks from 'nunjucks'
 
 import readconfig from './lib/readconfig'
@@ -63,6 +62,13 @@ export const formPostHandler = async (event, context, callback) => {
   body      = pf.fields
 
   debug(id, ' fields ', pf.fields, ' files ', pf.files)
+  if (pf.err) {
+    return callback(null, {
+      statusCode: 422,
+      headers: rspHeaders,
+      body: JSON.stringify({code: 422, message: pf.err})
+    })
+  }
 
   // define context for view-engine
   const locals = {
@@ -134,13 +140,12 @@ export const formPostHandler = async (event, context, callback) => {
   Object.keys(pf.files || {}).forEach((k) => {
     const f  = pf.files[k]
     const fi = {
-      key: `${id}/${locals.id}/${k}-${f.File.name}`,
+      key: `${id}/${locals.id}/${k}-${f.name}`,
       ref: k,
       bucket: process.env.FORMBUCKET
     }
     locals.files[k] = fi
-
-    tasks.push(uploadfile(fi, f.File))
+    tasks.push(uploadfile(locals, fi, f))
   })
 
   // render subject
