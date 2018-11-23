@@ -4,6 +4,7 @@ service: lambda-form
 plugins:
   - serverless-webpack
   - serverless-plugin-existing-s3
+  - serverless-apigw-binary
   - serverless-offline
 
 # serverless-webpack configuration
@@ -17,6 +18,9 @@ custom:
     port: 5000
     corsAllowOrigin: "*"
     corsAllowHeaders: "Origin, X-Requested-With, Content-Type, Accept"
+  apigwBinary:
+    types:
+      - 'multipart/form-data'
 
 provider:
   name: aws
