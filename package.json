@@ -1,6 +1,6 @@
 {
   "name": "lambda-form",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A form submission handler using Serverless and AWS Lambda",
   "main": "handler.js",
   "scripts": {

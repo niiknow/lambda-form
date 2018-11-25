@@ -1,9 +1,10 @@
-require("@babel/register")
+require('@babel/register')
 
-const post = require('./lib/postHandler')
-const http = require('http')
-const URL  = require('url')
-const resp = require('./lib/response').default
+const post  = require('./lib/postHandler')
+const http  = require('http')
+const URL   = require('url')
+const resp  = require('./lib/response').default
+const debug = require('debug')('lambda-form')
 
 http.createServer((req, res) => {
   if (req.method !== 'POST') {
@@ -22,7 +23,7 @@ http.createServer((req, res) => {
     id: path.split('/')[0]
   }
 
-  if (ctype.indexof('/json') > -1) {
+  if (ctype.indexOf('application/json') > -1) {
     let data = ''
     req.on('data', (chunk) => { data += chunk })
     req.on('end', () => {
@@ -33,5 +34,5 @@ http.createServer((req, res) => {
     return post(req, res, null)
   }
 }).listen(process.env.PORT || 5000, () => {
-  console.log('Listening for requests');
+  debug('Listening for requests');
 });

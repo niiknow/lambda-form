@@ -1,7 +1,7 @@
 FROM node:10
 LABEL maintainer="noogen <friends@niiknow.org>"
 ENV NPM_CONFIG_LOGLEVEL=warn \
-  LAMBDA_FORM_VERSION=1.2.2
+  LAMBDA_FORM_VERSION=1.2.3
 EXPOSE 5000
 
 RUN apt-get update && apt-get upgrade -y \
