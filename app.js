@@ -15,6 +15,6 @@ http.createServer((req, res) => {
   } else {
     return post(req, res, null)
   }
-}).listen(5000, () => {
+}).listen(process.env.PORT || 5000, () => {
   console.log('Listening for requests');
 });
