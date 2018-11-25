@@ -3,8 +3,13 @@ require("@babel/register")
 const post = require('./lib/postHandler')
 const http = require('http')
 const URL  = require('url')
+const resp = require('./lib/response').default
 
 http.createServer((req, res) => {
+  if (req.method !== 'POST') {
+    return resp(res, null)(`Invalid request method: ${req.method}`, 422)
+  }
+
   const url   = URL.parse(req.url, true)
   const ctype = req.headers['Content-Type'] | req.headers['content-type']
 
