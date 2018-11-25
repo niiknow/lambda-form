@@ -1,5 +1,6 @@
-import post from './lib/postHandler'
+require("@babel/register")
 
+const post = require('./lib/postHandler')
 const http = require('http')
 
 http.createServer((req, res) => {
