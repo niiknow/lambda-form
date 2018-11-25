@@ -20,6 +20,7 @@ custom:
     corsAllowHeaders: "Origin, X-Requested-With, Content-Type, Accept"
   apigwBinary:
     types:
+      - 'application/x-www-form-urlencoded'
       - 'multipart/form-data'
 
 provider:

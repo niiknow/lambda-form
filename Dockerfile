@@ -1,4 +1,4 @@
-FROM node:8.10
+FROM node:10
 LABEL maintainer="noogen <friends@niiknow.org>"
 ENV NPM_CONFIG_LOGLEVEL=warn \
   LAMBDA_FORM_VERSION=1.1.3
@@ -6,6 +6,7 @@ EXPOSE 5000
 
 RUN apt-get update && apt-get upgrade -y \
   && apt-get install git -y \
+  && npm install -g pm2 \
   && mkdir -p /usr/local/lambdaform \
   && groupadd -r lambdaform && useradd -r -g lambdaform -d /usr/local/lambdaform lambdaform \
   && chown lambdaform:lambdaform /usr/local/lambdaform \
