@@ -143,15 +143,13 @@ use-random-guid-for-best-form-id-performance/!config.json
 * This project require AWS S3 private bucket.  Please make sure your bucket is not public or you will expose your SMTP and other credentials.
 * AWS may block or limit sends from port 25, so you should use a different port.
 * Outside of FORMBUCKET, there is no other config on the server. Each form configuration contain it's own SMTP setup.
-* Remember, if you use application/x-www-form-urlencoded, you should set a redirection (redir property) to provide redirect result.  The front-end can also pass in a "redir" query string parameter.
+* Remember, if you don't use ajax, you should set a redirection (redir property) to provide redirect result.  The front-end can also pass in a "redir" query string parameter.
 
 # TODO/Future Enhancements
 - [ ] Filters to include or exclude fields so hidden form field won't come through to the email
 - [ ] Per field validation - possibly use [Indicative](https://indicative.adonisjs.com/) for validation of json
-- [ ] Handle Image/File form submit/upload
 - [ ] Probably a plugin system to allow plugins enabling base on form config.  Possible plugins:  fallback with SES, more spam validation, ability to track email with google analytic pixel
 - [ ] Payment gateway integration strategy start with Stripe.  Maybe it will be part of plugin system.
-- [ ] Refactor email and google recaptcha into plugin?
 
 # Point of Interest
 Since this is Serverless, this setup can really scale.  It can be use as a component in your Software-as-a-Service *SaaS* platform, like a clone of wufoo.  All you need is an Admin portal with a FormBuilder - hint - [grapejs](https://github.com/artf/grapesjs)
