@@ -20,8 +20,8 @@ Fill out the demo form with a real email and wait for result.
 ![](https://raw.githubusercontent.com/niiknow/lambda-form/master/demo/lambda-form.jpg?raw=true)
 
 **Bot/Spam deterrent features**
-- Define a honeypot hidden input to protect from generic spam bot - if run any kind of commentable blog/website, you've probably seen bots that auto-submit these forms with spam.  Honeypot help deny majority of these dumb bots.
-- Define website origins to protect being use with unknown website.
+- Define a honeypot (hidden input) to protect from generic spam bot - if you run any kind of commentable blog/website, you've probably seen bots that auto-submit these forms with spam.  Honeypot help deny majority of these dumb bots.
+- Define website origins to protect form being use on unknown website.
 - Setup recaptcha to prevent smarter bots.
 
 # Tech Stacks
