@@ -119,11 +119,9 @@ use-random-guid-for-best-form-id-performance/!config.json
     "smtp_port": 587,
     "smtp_secure": false,
     "business_name": "niiknow",
-    "validate_recaptcha": {
-      "site_key": "the site key",
-      "secret_key": "the secret key",
-      "field": "the form field name, default g-recaptcha-response"
-    },
+    "recaptcha_key": "the site key",
+    "recaptcha_secret": "the secret key",
+    "recaptcha_field": "the form field name, default g-recaptcha-response",
     "validate_origins": "a comma separated list of valid origins",
     "validate_honeypot": "honeypot field name",
     "id": "some guid representing the form id",

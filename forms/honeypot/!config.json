@@ -6,11 +6,9 @@
     "smtp_port": 587,
     "smtp_secure": false,
     "business_name": "niiknow",
-    "validate_recaptcha": {
-      "site_key": "the site key",
-      "secret_key": "the secret key",
-      "field": "the form field name, default g-recaptcha-response"
-    },
+    "recaptcha_key": "the site key",
+    "recaptcha_secret": "the secret key",
+    "recaptcha_field": "the form field name, default g-recaptcha-response",
     "validate_origins": "*",
     "validate_honeypot": "honeypot",
     "id": "some guid representing the form id",
