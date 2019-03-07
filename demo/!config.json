@@ -1,17 +1,17 @@
 {
-    "smtp_from": "xxx",
+    "from_email": "xxx",
     "smtp_host": "xxx",
     "smtp_user": "xxx",
     "smtp_pass": "xxx",
     "smtp_port": 587,
-    "owner_email": "noogen@yahoo.com",
+    "notify_email": "noogen@yahoo.com",
     "business_name": "niiknow",
-    "validate_honeypot": "_yodawg",
-    "validate_origins": "niiknow.github.io",
+    "honeypot_field": "_yodawg",
+    "valid_origins": "niiknow.github.io",
     "id": "demo",
     "name": "Demo Contact Us",
-    "owner_subject": "{{body.surname}} Contact Us Demo",
-    "email_user": "email",
-    "user_subject": "{{config.business_name}} Contact Form",
-    "field_exclude_regex": "^_"
+    "notify_subject": "{{body.surname}} Contact Us Demo",
+    "email_field": "email",
+    "email_subject": "{{config.business_name}} Contact Form",
+    "exclude_fields": "^_"
 }

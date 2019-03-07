@@ -77,3 +77,16 @@ functions:
               - s3:ObjectCreated:*
             rules:
               - suffix: .submit
+
+  authHandler:
+    handler: handler.authHandler
+    events:
+      - http:
+            method: post
+            path: auth/{id}/{type}
+            cors: true
+            request:
+              parameters:
+                paths:
+                  id: true
+                  type: true

@@ -1,18 +1,18 @@
 {
-    "smtp_from": "from email",
+    "from_email": "from email",
     "smtp_host": "mail.example.com",
     "smtp_user": "username",
     "smtp_pass": "password",
     "smtp_port": 587,
     "smtp_secure": false,
     "business_name": "niiknow",
-    "validate_origins": "*",
-    "validate_honeypot": "_asdf",
-    "id": "some guid representing the form id",
+    "valid_origins": "*",
+    "honeypot_field": "_asdf",
+    "form_id": "some guid representing the form id",
     "name": "User friendly name for this form",
-    "owner_email": "user@example.com",
-    "owner_subject": "the subject to notify owner_email with",
-    "email_user": "email",
-    "user_subject": "user subject, can be templated like owner_subject",
-    "field_exclude_regex": "^_"
+    "notify_email": "user@example.com",
+    "notify_subject": "the subject to notify notify_email with",
+    "email_field": "email",
+    "email_subject": "user subject, can be templated like notify_subject",
+    "exclude_fields": "^_"
 }

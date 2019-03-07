@@ -1,5 +1,5 @@
 {
-    "smtp_from": "from email",
+    "from_email": "from email",
     "smtp_host": "mail.example.com",
     "smtp_user": "username",
     "smtp_pass": "password",
@@ -9,15 +9,15 @@
     "recaptcha_key": "the site key",
     "recaptcha_secret": "the secret key",
     "recaptcha_field": "the form field name, default g-recaptcha-response",
-    "validate_origins": "*",
-    "validate_honeypot": "honeypot field name",
+    "valid_origins": "*",
+    "honeypot_field": "honeypot field name",
     "id": "some guid representing the form id",
     "name": "User friendly name for this form",
-    "owner_email": "who to notify user's submission to",
-    "owner_subject": "the subject to notify owner_email with",
-    "owner_body": "actual mjml template or empty to use fallback/owner.mjml",
+    "notify_email": "who to notify user's submission to",
+    "notify_subject": "the subject to notify notify_email with",
+    "notify_body": "actual mjml template or empty to use fallback/owner.mjml",
     "redir": "https://www.example.com/thank-you-page",
-    "email_user": "identify the email field on the form to send a copy",
-    "user_subject": "user subject, can be templated like owner_subject",
-    "user_body": "actual mjml template or empty to use fallback/user.mjml"
+    "email_field": "identify the email field on the form to send a copy",
+    "email_subject": "user subject, can be templated like notify_subject",
+    "email_body": "actual mjml template or empty to use fallback/submitter.mjml"
 }
