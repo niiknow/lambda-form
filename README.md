@@ -34,7 +34,7 @@ Fill out the demo form with a real email and wait for result.
 **Run Stack**
 * [MJML](https://mjml.io/) and [Nunjucks](https://mozilla.github.io/nunjucks/)- so you can customize your email
 * [nodemailer](https://github.com/nodemailer/nodemailer) - send smtp email (pretty much everybody does smtp, including: ses, sendgrid, mailgun, sendinblue, etc...)
-* [recaptcha2](https://github.com/fereidani/recaptcha2) - to protect your form
+* [recaptcha2](https://github.com/fereidani/recaptcha2) - to protect your form, it will work with g-recaptcha v3 since it uses the same API endpoint
 
 # Commands
 **To Test**
