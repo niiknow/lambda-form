@@ -3,7 +3,8 @@ export DEBUG=lambda-form
 export SLS_DEBUG=*
 
 serverless invoke local -f formPostHandler -p tests/404.json
-serverless invoke local -f formPostHandler -p tests/deleted.json | grep 'Form deleted no longer accept submission.'
+serverless invoke local -f formPostHandler -p tests/not-started.json | grep 'Form not-started is unavailable.'
+serverless invoke local -f formPostHandler -p tests/ended.json | grep 'Form ended no longer accept submission.'
 serverless invoke local -f formPostHandler -p tests/email-custom.json | grep '"https://www.example.com/thank-you-page'
 serverless invoke local -f formPostHandler -p tests/email-default.json | grep 'email-default submission accepted.'
 serverless invoke local -f formPostHandler -p tests/honeypot.json | grep 'Missing data in submission.'

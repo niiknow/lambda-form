@@ -17,6 +17,7 @@
     "notify_subject": "the subject to notify notify_email with",
     "notify_body": "actual mjml template or empty to use fallback/owner.mjml",
     "redir": "https://www.example.com/thank-you-page",
+    "started_at": "2019-01-01",
     "email_field": "identify the email field on the form to send a copy",
     "email_subject": "user subject, can be templated like notify_subject",
     "email_body": "actual mjml template or empty to use fallback/submitter.mjml"

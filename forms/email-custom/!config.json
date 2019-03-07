@@ -14,6 +14,7 @@
     "notify_subject": "the subject to notify notify_email with",
     "owner_template": "<mjml><mj-body><mj-text>hello owner</mj-text></mj-body></mjml>",
     "redir": "https://www.example.com/thank-you-page",
+    "started_at": "2019-01-01",
     "email_field": "email",
     "email_subject": "user subject, can be templated like notify_subject",
     "email_body": "<mjml><mj-body><mj-text>hello user</mj-text></mj-body></mjml>"

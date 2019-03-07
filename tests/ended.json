@@ -1,0 +1,13 @@
+{
+  "headers": {
+    "content-type": "application/json"
+  },
+  "pathParameters": {
+    "id": "ended"
+  },
+  "body": "{\"honeypot\": \"has data\"}",
+  "stageVariables": {
+    "debug": true
+  },
+  "requestContext": {}
+}

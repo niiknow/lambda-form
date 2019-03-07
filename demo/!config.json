@@ -13,5 +13,6 @@
     "notify_subject": "{{body.surname}} Contact Us Demo",
     "email_field": "email",
     "email_subject": "{{config.business_name}} Contact Form",
+    "started_at": "2019-01-01",
     "exclude_fields": "^_"
 }

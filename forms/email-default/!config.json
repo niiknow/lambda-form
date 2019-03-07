@@ -14,5 +14,6 @@
     "notify_subject": "the subject to notify notify_email with",
     "email_field": "email",
     "email_subject": "user subject, can be templated like notify_subject",
+    "started_at": "2019-01-01",
     "exclude_fields": "^_"
 }

@@ -3,7 +3,7 @@
     "content-type": "application/json"
   },
   "pathParameters": {
-    "id": "deleted"
+    "id": "not-started"
   },
   "body": "{\"honeypot\": \"has data\"}",
   "stageVariables": {
