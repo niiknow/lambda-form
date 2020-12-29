@@ -92,7 +92,7 @@
               <div class="col-md-12">
                 <script src="https://www.google.com/recaptcha/api.js?render=6LdkmBkaAAAAAA3FO1buOrXPcJ1zPkLZmC7PUHkd"></script>
                 <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response" data-sitekey="6LdkmBkaAAAAAA3FO1buOrXPcJ1zPkLZmC7PUHkd" data-action="submit">
-                <input id="doIt" type="button" class="btn btn-success btn-send" value="Send message">
+                <input id="doIt" type="button" class="btn btn-success btn-send" value="Send message" onclick="onClick()">
               </div>
             </div>
             <div class="row">
@@ -123,7 +123,6 @@
   $form.validator();
 
   function onClick(e) {
-      e.preventDefault();
       var input = $('#g-recaptcha-response');
 
       grecaptcha.ready(function() {
