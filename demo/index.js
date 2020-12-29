@@ -5,13 +5,13 @@ var $form = $('#contact-form');
 $form.validator();
 
 function onClick(e) {
-  debugger;
   var input = $('#g-recaptcha-response');
 
   grecaptcha.ready(function() {
-    grecaptcha.execute(input.data('sitekey'), {action: input.data('action')}).then(function(rsp) {
+    grecaptcha.execute(input.data('sitekey'), {action: input.data('action')}).then(function(token) {
       // Add your logic to submit to your backend server here.
       // https://developers.google.com/recaptcha/docs/verify
+      input.val(token);
       $form.submit();
     });
   });
