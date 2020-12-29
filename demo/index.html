@@ -92,7 +92,7 @@
               <div class="col-md-12">
                 <script src="https://www.google.com/recaptcha/api.js?render=6LdkmBkaAAAAAA3FO1buOrXPcJ1zPkLZmC7PUHkd"></script>
                 <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response" data-sitekey="6LdkmBkaAAAAAA3FO1buOrXPcJ1zPkLZmC7PUHkd" data-action="submit">
-                <input type="submit" class="btn btn-success btn-send" value="Send message">
+                <input id="doIt" type="button" class="btn btn-success btn-send" value="Send message">
               </div>
             </div>
             <div class="row">
@@ -116,15 +116,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js" integrity="sha256-dHf/YjH1A4tewEsKUSmNnV05DDbfGN3g7NMq86xgGh8=" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
-  $(function () {
-    // init the validator
-    // validator files are included in the download package
-    // otherwise download from http://1000hz.github.io/bootstrap-validator
-    $('#contact-form').validator();
+  var $form = $('#contact-form');
+  // init the validator
+  // validator files are included in the download package
+  // otherwise download from http://1000hz.github.io/bootstrap-validator
+  $form.validator();
 
+  function onClick(e) {
+      e.preventDefault();
+      var input = $('#g-recaptcha-response');
+
+      grecaptcha.ready(function() {
+        grecaptcha.execute(input.data('sitekey'), {action: input.data('action')}).then(function(rsp) {
+          // Add your logic to submit to your backend server here.
+          // https://developers.google.com/recaptcha/docs/verify
+          $form.submit();
+        });
+      });
+    };
+
+  $(function () {
     // when the form is submitted
-    $('#contact-form').on('submit', function (e) {
-      $form = $(this); //wrap this in jQuery
+    $form.on('submit', function (e) {
 
       // if the validator does not prevent form submit
       if (!e.isDefaultPrevented()) {
