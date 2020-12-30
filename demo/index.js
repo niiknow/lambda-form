@@ -4,19 +4,6 @@ var $form = $('#contact-form');
 // otherwise download from http://1000hz.github.io/bootstrap-validator
 $form.validator();
 
-function onClick(e) {
-  var input = $('#g-recaptcha-response');
-
-  grecaptcha.ready(function() {
-    grecaptcha.execute(input.data('sitekey'), {action: input.data('action')}).then(function(token) {
-      // Add your logic to submit to your backend server here.
-      // https://developers.google.com/recaptcha/docs/verify
-      input.val(token);
-      $form.submit();
-    });
-  });
-};
-
 $(function () {
   // when the form is submitted
   $form.on('submit', function (e) {
