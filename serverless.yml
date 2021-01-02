@@ -3,7 +3,6 @@ service: lambda-form
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
   - serverless-webpack
-  - serverless-plugin-existing-s3
   - serverless-apigw-binary
   - serverless-offline
 
@@ -71,12 +70,12 @@ functions:
   submissionHandler:
     handler: handler.submissionHandler
     events:
-      - existingS3:
-            bucket: ${file(env.yml):${self:provider.stage}.FORMBUCKET}
-            events:
-              - s3:ObjectCreated:*
-            rules:
-              - suffix: .submit
+      - s3:
+          bucket: ${file(env.yml):${self:provider.stage}.FORMBUCKET}
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .submit
+          existing: true
 
   authHandler:
     handler: handler.authHandler
